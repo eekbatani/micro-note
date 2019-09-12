@@ -8,13 +8,44 @@
   <meta name="description" content="Micro-Note">
   <meta name="author" content="SitePoint">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
 
+  <link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css">
+  
 </head>
 
-<body>
-    <h1>TEST</h1>
+<body style="margin-left: 10%; margin-right: 10%;">
+    <h1>DPS909 Lab 2</h1>
 
-  <script src="js/scripts.js"></script>
+    <h2> Micro-Note </h2>
+
+    <div id="note" contenteditable></div>
+ 
+  <script src="https://unpkg.com/filer/dist/filer.min.js"></script>
+  <script>const 
+    fs = new Filer.FileSystem(); 
+    
+    document.addEventListener('DOMContentLoaded', (event) => {
+        
+        fs.readFile('/note', 'utf8', function(err, data) {
+            if(err != null || data == null){
+                data = "Welcome to my notepad!"
+            }
+            var text = document.createTextNode(data);
+            document.querySelector('#note').appendChild(text);
+            
+        
+        });
+    });
+
+    var saveFile = function(){
+        fs.writeFile('/note', document.querySelector('#note').innerHTML, function (err) {
+            if (err) throw err;
+        });
+    }
+
+    var interval = window.setInterval(saveFile, 3000);
+
+ </script>
+
 </body>
 </html>
