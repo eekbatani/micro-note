@@ -30,9 +30,8 @@
             if(err != null || data == null){
                 data = "Welcome to my notepad!"
             }
-            var text = document.createTextNode(data);
-            document.querySelector('#note').appendChild(text);
-            
+          
+            document.querySelector('#note').innerHTML = data;
         
         });
     });
