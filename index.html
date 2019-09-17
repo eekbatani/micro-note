@@ -1,6 +1,7 @@
 <!doctype html>
 
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
 
@@ -10,54 +11,79 @@
 
 
   <link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css">
-  
+
 </head>
 
 <body style="margin-left: 10%; margin-right: 10%;">
-    <h1>DPS909 Lab 2</h1>
+  <h1>DPS909 Lab 2</h1>
 
-    <h2> Micro-Note </h2>
-
-
-
-    <div class="card" style="width: 85%;">
-        <div class="card-body">
-          <h4 class="card-title">Type Your Notes in Below</h4>
-       
-          <p class="card-text">
-            <div id="note" contenteditable></div>
-          </p>
-         
-        </div>
-      </div>
+  <h2> Micro-Note </h2>
 
 
- 
+
+  <div class="card" style="width: 85%;margin-left:10%">
+    <div class="card-body">
+      <h4 class="card-title">Type Your Notes in Below</h4>
+      <div id="note" contenteditable="true"></div>
+      <p class="card-text">
+        
+      </p>
+      
+    </div>
+  </div>
+  <p style="text-align: center;">Use Ctrl+E to save</p>
+
+
   <script src="https://unpkg.com/filer/dist/filer.min.js"></script>
-  <script>const 
-    fs = new Filer.FileSystem(); 
-    
+  <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+  <script>const
+      fs = new Filer.FileSystem();
+
     document.addEventListener('DOMContentLoaded', (event) => {
-        
-        fs.readFile('/note', 'utf8', function(err, data) {
-            if(err != null || data == null){
-                data = "Welcome to my notepad!"
-            }
-          
-            document.querySelector('#note').innerHTML = data;
-        
-        });
+
+      fs.readFile('/note', 'utf8', function (err, data) {
+        if (err != null || data == null) {
+          data = "Welcome to my notepad!"
+        }
+
+        document.querySelector('#note').innerHTML = data;
+
+      });
     });
 
-    var saveFile = function(){
-        fs.writeFile('/note', document.querySelector('#note').innerHTML, function (err) {
-            if (err) throw err;
-        });
+    var saveFile = function () {
+      fs.writeFile('/note', document.querySelector('#note').innerHTML, function (err) {
+        if (err) throw err;
+      });
     }
 
     var interval = window.setInterval(saveFile, 3000);
+    
+    //Since you're using ContentEditable, the following filter is needed.
+    hotkeys.filter = function (event) {
+      var tagName = (event.target || event.srcElement).tagName;
+      return !(tagName.isContentEditable || tagName == 'INPUT' || tagName == 'SELECT' || tagName == 'TEXTAREA' || tagName == 'DIV');
+    }
+    var userText = document.getElementById("note");
+    //The function bellow uses control + e on Mac to save your whiteboard notes
+    hotkeys('control+e', function (event, handler) {
+      if (handler.key == "control+e") {
+        
+        fs.writeFile('/note', userText.innerHTML, function (err) {
+          if (err) {
+            console.log(err);
+            throw err;
 
- </script>
+          }
+        });
+        alert('File is saved');
+      }
+    })
+
+
+
+  </script>
 
 </body>
+
 </html>
